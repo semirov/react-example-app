@@ -1,61 +1,51 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import getUsersFromJsonPlaceholder from './api/getUsersFromJsonPlaceholder';
 import getPostsFromJsonPlaceholder from './api/getPostsFromJsonPlaceholder';
+import store from './store/store';
+import * as actionTypes from './store/action-types';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Dashboard from './components/dashboard/Dashboard';
-
-// for test
 import PostDetail from './components/PostDetail';
 import UserDetail from './components/UserDetail';
 
 class App extends Component {
-  state = {
-    posts: [],
-    users: []
-  };
+
   componentDidMount() {
     this.getUserList();
     this.getPostsList();
   }
 
   async getUserList() {
-    const userList = await getUsersFromJsonPlaceholder();
-    const newState = Object.assign({}, this.state, {
-      users: userList
-    });
-    this.setState(newState);
+    const users = await getUsersFromJsonPlaceholder();
+    store.dispatch({type: actionTypes.ADD_USERS, users })
   }
 
   async getPostsList() {
-    const postsList = await getPostsFromJsonPlaceholder();
-    const newState = Object.assign({}, this.state, {
-      posts: postsList
-    })
-    this.setState(newState);
+    const posts = await getPostsFromJsonPlaceholder();
+    store.dispatch({type: actionTypes.ADD_POSTS, posts })
   }
 
 
   render() {
     return (
-      <div>
-        <div className="container">
+      <Router>
+        <div>
           <Header />
-          <div className="container">
-            <Dashboard />
-          </div>
-
-          <div className="container">
-            <PostDetail />
-          </div>
-          <div className="container">
-            <UserDetail />
-          </div>
-
+            <div className="container">
+              <Switch>
+                <Route path="/" component={Dashboard}  />
+                <Route path="/user/:id" component={UserDetail} />
+                <Route path="/post/:id" component={PostDetail} />
+                <Route component = {Dashboard}/>
+              </Switch>
+            </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </Router>
     );
   }
 }

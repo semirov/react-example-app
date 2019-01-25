@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Paginator extends Component {
+class PostCard extends Component {
     render() {
         return (
             <div className="col-lg-6 card-post-item">
@@ -26,4 +26,4 @@ class Paginator extends Component {
     }
 }
 
-export default Paginator;
+export default PostCard;
