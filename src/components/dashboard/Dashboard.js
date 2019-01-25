@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
-import Paginator from './Paginator';
 import PostCard from './PostCard';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        posts: [],
+        hasMore: true
+    };
+  }
 
+  testPosts = [1];
   getPostCardList() {
     const posts = this.props.posts;
     if(posts.length === 0) {
@@ -15,16 +22,30 @@ class Dashboard extends Component {
     });
   }
 
+  fetchMoreData() {
+    console.log('loadData');
+  }
+
   render() {
+    if(this.props.posts.length === 0) {
+      return <h4>Loading......</h4>
+    }
     return (
       <div>
-        <h1 className="my-4">
-          Posts
-        </h1>
+        <h1 className="my-4">Posts</h1>
         <div className="row">
-            {this.getPostCardList()}
+            {/* {this.getPostCardList()} */}
+
+            <InfiniteScroll
+              dataLength={this.props.posts.length}
+              next={this.fetchMoreData}
+              hasMore={true}
+              loader={<h4>Loading...</h4>}>
+              <div>
+                <p>test123 {this.props.posts.length}</p>
+              </div>
+            </InfiniteScroll>
         </div>
-        <Paginator />
       </div>
 
     );
