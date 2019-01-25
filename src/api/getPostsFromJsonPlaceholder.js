@@ -8,7 +8,7 @@ async function getPostsFromJsonPlaceholder() {
         const responce = await axios.get("https://jsonplaceholder.typicode.com/posts");
         return responce.data.map(post => {
             return {
-                userId: post.id,
+                userId: post.userId,
                 id: post.id,
                 title: post.title,
                 body: post.body

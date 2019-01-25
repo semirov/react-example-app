@@ -4,7 +4,7 @@ class Paginator extends Component {
   render() {
     return (
         <ul className="pagination justify-content-center">
-        <li className="page-item">
+        <li className="page-item disabled">
           <a className="page-link" href="#" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span className="sr-only">Previous</span>

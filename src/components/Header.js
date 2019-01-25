@@ -6,7 +6,7 @@ class Header extends Component {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div className="container">
-          <a className="navbar-brand" href="#">JSONPlaceholder posts</a>
+          <Link to="/"  className="navbar-brand">JSONPlaceholder posts</Link>
           <button
             className="navbar-toggler"
             type="button"

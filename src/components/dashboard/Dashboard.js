@@ -4,20 +4,25 @@ import PostCard from './PostCard';
 
 
 class Dashboard extends Component {
+
+  getPostCardList() {
+    const posts = this.props.posts;
+    if(posts.length === 0) {
+      return <p>Loading....</p>
+    }
+    return this.props.posts.map(post => {
+      return <PostCard key = {post.id} post = {post}/>
+    });
+  }
+
   render() {
     return (
       <div>
         <h1 className="my-4">
-          Title
+          Posts
         </h1>
         <div className="row">
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          <PostCard/>
-          
+            {this.getPostCardList()}
         </div>
         <Paginator />
       </div>
