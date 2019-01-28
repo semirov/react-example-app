@@ -5,39 +5,68 @@ import  ReactDOM  from 'react-dom';
 
 class Dashboard extends Component {
 
+  postCardRefs;
 
   constructor(props) {
     super(props);
+    this.postCardRefs = [];
     this.state = {
       posts: [],
       hasMoreItems: true,
       postPerPage: 6,
-      loadPage: this.props.match.params.page
+      loadPage: Number(this.props.match.params.page) || 1,
+      currentPage: 0,
+      firstNavigateComplete: false
     };
   }
   componentDidMount() {
-    this.loadPosts.call(this, this.state.loadPage);
+    // firt initial post load
+    this.initialLoad(true);
   }
 
   componentDidUpdate() {
-    if(this.state.posts.length === 0) {
+    // initiall call pageloader and navigate to page if needed
+    this.initialLoad();
+    this.navigateToPostIfPageIsPresent();
+  }
+
+
+  initialLoad(checkIfExist = false) {
+    if(this.state.posts.length === 0 || checkIfExist) {
       this.loadPosts.call(this, this.state.loadPage)
     } 
+  }
+
+  navigateToPostIfPageIsPresent() {
+    // get post index in refArray
+    let index  = this.state.loadPage * this.state.postPerPage - (this.state.postPerPage - 1);
+    // if the page number is greater than the maximum
+    if (index > this.postCardRefs.length && this.state.loadPage !== 1) {
+      index = this.postCardRefs.length - 1;
+    }
+    let cardRef = this.postCardRefs[index];
+    // if first navigation not complete
+    if (cardRef && !this.state.firstNavigateComplete) {
+      let node = ReactDOM.findDOMNode(cardRef);
+      node.scrollIntoView({block: 'end', behavior: 'smooth'});
+      this.setState({ firstNavigateComplete: true });
+    }
   }
 
 
   loadPosts = (page) => {
     let posts = this.props.posts.slice(0, this.state.postPerPage * page).map(post => {
-      return <PostCard key={post.id} post={post}  />
+      return <PostCard key={post.id} post={post} ref = {(ref) => this.postCardRefs[post.id] = ref}  />
     });
     if (posts.length !== 0) {
-      this.setState({
-        posts: posts,
-        hasMoreItems: this.state.posts.length < this.props.posts.length,
-      });
       let pageNum = Math.floor(this.state.posts.length / this.state.postPerPage);
       pageNum = pageNum == 0 ? page : pageNum;
       this.props.history.push('/page/' + pageNum);
+      this.setState({
+        posts: posts,
+        hasMoreItems: this.state.posts.length < this.props.posts.length,
+        currentPage: pageNum
+      });
     }
   }
 
