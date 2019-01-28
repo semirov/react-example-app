@@ -5,7 +5,7 @@ import Dasboard from '../components/dashboard/Dashboard'
 class DashboardContainer extends Component{
 
   render() {
-    return <Dasboard posts={this.props.posts} />
+    return <Dasboard {...this.props} posts={this.props.posts} />
   }
 
 };
